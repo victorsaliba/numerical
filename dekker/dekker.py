@@ -12,7 +12,6 @@ def dekker(f, a, b):
         raise Exception('The function must change sign in [a, b]')
     pass
 
-
 def main():
     pass
 
