@@ -1,7 +1,7 @@
 ################################################################################
 # Authors: Luiz Gustavo Mugnaini Anselmo (nUSP: 11809746)
 #          Victor Manuel Saliba (nUSP: )
-#          Luan Marc (nUSP: )
+#          Luan Marc (nUSP: 11809090)
 #
 # Dekker method for finding roots of a given function.
 ################################################################################
