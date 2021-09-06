@@ -49,11 +49,9 @@ def dekker(f, a1, b1, b0, ERROABS, ERROREL, i, I_0, j):
 	# CALCULA A NOVA APROXIMAÇÃO (b2)
 	b2 = m # Inicializa a variável b2
 
-	# ERROR
 	if abs(s - b1) < TOL:
 		b2 = b1 + TOL * (b1 - a1)/abs(b1 - a1)
-	# ERROR
-	if m < s and s < b1:
+	elif m < s and s < b1:
 		b2 = s
 	else:
 		b2 = m
