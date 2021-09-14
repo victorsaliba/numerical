@@ -17,7 +17,7 @@
 import math
 
 def func(x):
-	return(x*(math.exp(10 / x) + math.exp(-(10 / x)) - 2) - 1)
+	return(x**2 - 2)
 #=============================================================================
 
 
@@ -25,21 +25,23 @@ def func(x):
 #=============================================================================
 def dekker(f, a1, b1, b0, ERROABS, ERROREL, i, I_0, j):
 
-	# ATUALIZA A QUANTIDADE DE ITERAÇÕES REALIZADAS
-	i = i + 1
-
 	# VERIFICA SE A APROXIMAÇÃO É ACEITÁVEL
 	TOL = max(ERROABS, abs(b1) * ERROREL)
 	if abs((b1 - a1) / 2) < TOL or f(b1) == 0:
-		return b1
+		return (b1, i)
+
+	# ATUALIZA A QUANTIDADE DE ITERAÇÕES REALIZADAS
+	i += 1
 
 	# CALCULA O PONTO MÉDIO E O VALOR PROVISÓRIO (s)
 	m = (a1 + b1) / 2
 	s = m # Inicializa a variável s
 	# Método da dicotomia (caso em que o fator de redução não é satisfatório)
-	if (i == 4 and (abs(b1 - a1) / I_0) > 0.125) or (0 < j and j < 3):
+	if (i % 4 == 0 and (abs(b1 - a1) / I_0) > 0.125) or (0 < j < 3):
 		s = m
-		j = j + 1
+		j += 1
+		if j == 3:
+			j = 0
 	# Método da secante
 	elif f(b1) != f(b0):
 		delta = f(b1) * ((b1 - b0)/(f(b1) - f(b0)))
@@ -50,10 +52,9 @@ def dekker(f, a1, b1, b0, ERROABS, ERROREL, i, I_0, j):
 
 	# CALCULA A NOVA APROXIMAÇÃO (b2)
 	b2 = m # Inicializa a variável b2
-
-	if abs(s - b1) < TOL:
-		b2 = b1 + TOL * (b1 - a1)/abs(b1 - a1)
-	elif m < s and s < b1:
+	if abs(b1 - s) < TOL:
+		b2 = b1 + TOL * ((b1 - a1)/abs(b1 - a1))
+	elif min(b1, m) < s and s < max(b1, m):
 		b2 = s
 	else:
 		b2 = m
@@ -70,6 +71,9 @@ def dekker(f, a1, b1, b0, ERROABS, ERROREL, i, I_0, j):
 		aux = b2
 		b2 = a2
 		a2 = aux
+
+	if i % 4 == 0:
+		I_0 = abs(b2 - a2)
 
 	return dekker(f, a2, b2, b1, ERROABS, ERROREL, i, I_0, j)
 #=============================================================================
@@ -89,12 +93,14 @@ def main():
 
 	if func(a) * func(b) >= 0:
 		raise Exception("The function must change sign in [a_0, b_0]")
-		pass
 
 	# Calcula a aproximação para a raiz da função f, bar_x
-	bar_x = dekker(func, a, b, a, ERROABS, ERROREL, 0, b - a, 0)
+	bar_x, i = dekker(func, a, b, a, ERROABS, ERROREL, 0, b - a, 0)
 
+	print("Aproximacao:")
 	print(bar_x)
+	print("Qtd de iteracoes:")
+	print(i)
  
 if __name__ == "__main__":
     main()
